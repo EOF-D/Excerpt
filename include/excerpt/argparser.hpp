@@ -39,12 +39,17 @@ namespace excerpt {
     bool show_help() const { return help; }
 
    private:
+    // The input file name.
     llvm::cl::opt<std::string> _input_file{
         llvm::cl::Positional, llvm::cl::desc("Specify input filename"),
         llvm::cl::value_desc("filename"), llvm::cl::init("-")};
+
+    // The output file name.
     llvm::cl::opt<std::string> _output_file{
         "output", llvm::cl::desc("Specify output filename"),
         llvm::cl::value_desc("filename")};
+
+    // True if the help flag is set, otherwise false.
     llvm::cl::opt<bool> help{llvm::cl::desc("Show help")};
   };
 
