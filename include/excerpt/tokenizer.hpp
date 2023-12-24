@@ -80,6 +80,64 @@ namespace excerpt {
      * @param v The value associated with the token.
      */
     Token(TokenType t, const std::string& v) : type(t), value(v) {}
+
+    /**
+     * @brief Get the string representation of a token type.
+     * @param type The token type.
+     * @return The string representation of the token type.
+     */
+    static TokenType fromString(const std::string& str) {
+      static const std::unordered_map<std::string, TokenType> str_map = {
+          {"PLUS", TokenType::PLUS},
+          {"MINUS", TokenType::MINUS},
+          {"STAR", TokenType::STAR},
+          {"SLASH", TokenType::SLASH},
+          {"PERCENT", TokenType::PERCENT},
+          {"LPAREN", TokenType::LPAREN},
+          {"RPAREN", TokenType::RPAREN},
+          {"LBRACE", TokenType::LBRACE},
+          {"RBRACE", TokenType::RBRACE},
+          {"LBRACKET", TokenType::LBRACKET},
+          {"RBRACKET", TokenType::RBRACKET},
+          {"SEMICOLON", TokenType::SEMICOLON},
+          {"COLON", TokenType::COLON},
+          {"COMMA", TokenType::COMMA},
+          {"DOT", TokenType::DOT},
+          {"ASSIGN", TokenType::ASSIGN},
+          {"EQUAL", TokenType::EQUAL},
+          {"NOT_EQUAL", TokenType::NOT_EQUAL},
+          {"LESS", TokenType::LESS},
+          {"LESS_EQUAL", TokenType::LESS_EQUAL},
+          {"GREATER", TokenType::GREATER},
+          {"GREATER_EQUAL", TokenType::GREATER_EQUAL},
+          {"IF", TokenType::IF},
+          {"ELSE", TokenType::ELSE},
+          {"WHILE", TokenType::WHILE},
+          {"FOR", TokenType::FOR},
+          {"BREAK", TokenType::BREAK},
+          {"CONTINUE", TokenType::CONTINUE},
+          {"RETURN", TokenType::RETURN},
+          {"TRUE", TokenType::TRUE},
+          {"FALSE", TokenType::FALSE},
+          {"INT", TokenType::INT},
+          {"FLOAT", TokenType::FLOAT},
+          {"CHAR", TokenType::CHAR},
+          {"BOOL", TokenType::BOOL},
+          {"IDENTIFIER", TokenType::IDENTIFIER},
+          {"INTEGER_LITERAL", TokenType::INTEGER_LITERAL},
+          {"FLOAT_LITERAL", TokenType::FLOAT_LITERAL},
+          {"CHAR_LITERAL", TokenType::CHAR_LITERAL},
+          {"STRING_LITERAL", TokenType::STRING_LITERAL},
+          {"END", TokenType::END},
+          {"INVALID", TokenType::INVALID}};
+
+      auto it = str_map.find(str);
+      if (it != str_map.end()) {
+        return it->second;
+      }
+
+      return TokenType::INVALID;
+    }
   };
 
   /**

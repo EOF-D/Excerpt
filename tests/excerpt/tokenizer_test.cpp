@@ -97,3 +97,52 @@ TEST(TokenizerTest, TrueFalseTest) {
   EXPECT_EQ(tokenizer->scan()->type, excerpt::TokenType::FALSE);
   EXPECT_EQ(tokenizer->scan()->type, excerpt::TokenType::END);
 }
+
+TEST(TokenTypeTest, FromString) {
+  // Test known valid conversions
+  EXPECT_EQ(Token::fromString("PLUS"), TokenType::PLUS);
+  EXPECT_EQ(Token::fromString("MINUS"), TokenType::MINUS);
+  EXPECT_EQ(Token::fromString("STAR"), TokenType::STAR);
+  EXPECT_EQ(Token::fromString("SLASH"), TokenType::SLASH);
+  EXPECT_EQ(Token::fromString("PERCENT"), TokenType::PERCENT);
+  EXPECT_EQ(Token::fromString("LPAREN"), TokenType::LPAREN);
+  EXPECT_EQ(Token::fromString("RPAREN"), TokenType::RPAREN);
+  EXPECT_EQ(Token::fromString("LBRACE"), TokenType::LBRACE);
+  EXPECT_EQ(Token::fromString("RBRACE"), TokenType::RBRACE);
+  EXPECT_EQ(Token::fromString("LBRACKET"), TokenType::LBRACKET);
+  EXPECT_EQ(Token::fromString("RBRACKET"), TokenType::RBRACKET);
+  EXPECT_EQ(Token::fromString("SEMICOLON"), TokenType::SEMICOLON);
+  EXPECT_EQ(Token::fromString("COLON"), TokenType::COLON);
+  EXPECT_EQ(Token::fromString("COMMA"), TokenType::COMMA);
+  EXPECT_EQ(Token::fromString("DOT"), TokenType::DOT);
+  EXPECT_EQ(Token::fromString("ASSIGN"), TokenType::ASSIGN);
+  EXPECT_EQ(Token::fromString("EQUAL"), TokenType::EQUAL);
+  EXPECT_EQ(Token::fromString("NOT_EQUAL"), TokenType::NOT_EQUAL);
+  EXPECT_EQ(Token::fromString("LESS"), TokenType::LESS);
+  EXPECT_EQ(Token::fromString("LESS_EQUAL"), TokenType::LESS_EQUAL);
+  EXPECT_EQ(Token::fromString("GREATER"), TokenType::GREATER);
+  EXPECT_EQ(Token::fromString("GREATER_EQUAL"), TokenType::GREATER_EQUAL);
+  EXPECT_EQ(Token::fromString("IF"), TokenType::IF);
+  EXPECT_EQ(Token::fromString("ELSE"), TokenType::ELSE);
+  EXPECT_EQ(Token::fromString("WHILE"), TokenType::WHILE);
+  EXPECT_EQ(Token::fromString("FOR"), TokenType::FOR);
+  EXPECT_EQ(Token::fromString("BREAK"), TokenType::BREAK);
+  EXPECT_EQ(Token::fromString("CONTINUE"), TokenType::CONTINUE);
+  EXPECT_EQ(Token::fromString("RETURN"), TokenType::RETURN);
+  EXPECT_EQ(Token::fromString("TRUE"), TokenType::TRUE);
+  EXPECT_EQ(Token::fromString("FALSE"), TokenType::FALSE);
+  EXPECT_EQ(Token::fromString("INT"), TokenType::INT);
+  EXPECT_EQ(Token::fromString("FLOAT"), TokenType::FLOAT);
+  EXPECT_EQ(Token::fromString("CHAR"), TokenType::CHAR);
+  EXPECT_EQ(Token::fromString("BOOL"), TokenType::BOOL);
+  EXPECT_EQ(Token::fromString("IDENTIFIER"), TokenType::IDENTIFIER);
+  EXPECT_EQ(Token::fromString("INTEGER_LITERAL"), TokenType::INTEGER_LITERAL);
+  EXPECT_EQ(Token::fromString("FLOAT_LITERAL"), TokenType::FLOAT_LITERAL);
+  EXPECT_EQ(Token::fromString("CHAR_LITERAL"), TokenType::CHAR_LITERAL);
+  EXPECT_EQ(Token::fromString("STRING_LITERAL"), TokenType::STRING_LITERAL);
+  EXPECT_EQ(Token::fromString("END"), TokenType::END);
+  EXPECT_EQ(Token::fromString("INVALID"), TokenType::INVALID);
+
+  // Test an unknown string (should default to INVALID)
+  EXPECT_EQ(Token::fromString("UNKNOWN_TOKEN"), TokenType::INVALID);
+}
