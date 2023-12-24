@@ -73,3 +73,27 @@ TEST(TokenizerTest, EOFToken) {
   Tokenizer tokenizer(input);
   EXPECT_EQ(tokenizer.scan()->type, TokenType::END);
 }
+
+TEST(TokenizerTest, DataTypeTest) {
+  std::string input = "int float char bool";
+  auto tokenizer = std::make_shared<excerpt::Tokenizer>(
+      std::make_shared<std::string>(input));
+
+  // Test data type tokens
+  EXPECT_EQ(tokenizer->scan()->type, excerpt::TokenType::INT);
+  EXPECT_EQ(tokenizer->scan()->type, excerpt::TokenType::FLOAT);
+  EXPECT_EQ(tokenizer->scan()->type, excerpt::TokenType::CHAR);
+  EXPECT_EQ(tokenizer->scan()->type, excerpt::TokenType::BOOL);
+  EXPECT_EQ(tokenizer->scan()->type, excerpt::TokenType::END);
+}
+
+TEST(TokenizerTest, TrueFalseTest) {
+  std::string input = "true false";
+  auto tokenizer = std::make_shared<excerpt::Tokenizer>(
+      std::make_shared<std::string>(input));
+
+  // Test true and false tokens
+  EXPECT_EQ(tokenizer->scan()->type, excerpt::TokenType::TRUE);
+  EXPECT_EQ(tokenizer->scan()->type, excerpt::TokenType::FALSE);
+  EXPECT_EQ(tokenizer->scan()->type, excerpt::TokenType::END);
+}

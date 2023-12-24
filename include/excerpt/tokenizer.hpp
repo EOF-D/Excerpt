@@ -44,6 +44,8 @@ namespace excerpt {
     BREAK,
     CONTINUE,
     RETURN,
+    TRUE,
+    FALSE,
 
     // Data types
     INT,
@@ -115,7 +117,7 @@ namespace excerpt {
 
     /**
      * @brief Parses an identifier.
-     * @return An identifier token.
+     * @return An identifier token, can be a reserved keyword or data type.
      */
     std::shared_ptr<Token> parse_ident();
 

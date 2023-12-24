@@ -92,13 +92,25 @@ namespace excerpt {
         {"if", TokenType::IF},         {"else", TokenType::ELSE},
         {"while", TokenType::WHILE},   {"for", TokenType::FOR},
         {"break", TokenType::BREAK},   {"continue", TokenType::CONTINUE},
-        {"return", TokenType::RETURN},
-    };
+        {"return", TokenType::RETURN}, {"true", TokenType::TRUE},
+        {"false", TokenType::FALSE}};
+
+    static const std::unordered_map<std::string, TokenType> type_map = {
+        {"int", TokenType::INT},
+        {"float", TokenType::FLOAT},
+        {"char", TokenType::CHAR},
+        {"bool", TokenType::BOOL}};
 
     // Check if the identifier is a keyword
     auto keyword_it = keyword_map.find(identifier_value);
     if (keyword_it != keyword_map.end()) {
       identifier_type = keyword_it->second;
+    }
+
+    // Check if the identifier is a type
+    auto type_it = type_map.find(identifier_value);
+    if (type_it != type_map.end()) {
+      identifier_type = type_it->second;
     }
 
     return std::make_shared<Token>(identifier_type, identifier_value);
