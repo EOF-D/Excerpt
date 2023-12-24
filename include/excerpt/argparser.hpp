@@ -2,17 +2,17 @@
 
 #include "llvm/Support/CommandLine.h"
 
-
 namespace excerpt {
 
-/**
- * @brief Command-line parser for the Excerpt compiler.
- * This class uses LLVM's CommandLine library to parse command-line options.
- */
-class ArgParser {
-  public:
+  /**
+   * @brief Command-line parser for the Excerpt compiler.
+   * This class uses LLVM's CommandLine library to parse command-line options.
+   */
+  class ArgParser {
+   public:
     /**
-     * @brief Constructs a ArgParser instance and parses the command-line options.
+     * @brief Constructs a ArgParser instance and parses the command-line
+     * options.
      * @param argc The number of command-line arguments.
      * @param argv An array of command-line arguments.
      */
@@ -38,10 +38,14 @@ class ArgParser {
      */
     bool show_help() const { return help; }
 
-  private:
-    llvm::cl::opt<std::string> _input_file{llvm::cl::Positional, llvm::cl::desc("Specify input filename"), llvm::cl::value_desc("filename"), llvm::cl::init("-")};
-    llvm::cl::opt<std::string> _output_file{"output", llvm::cl::desc("Specify output filename"), llvm::cl::value_desc("filename")};
+   private:
+    llvm::cl::opt<std::string> _input_file{
+        llvm::cl::Positional, llvm::cl::desc("Specify input filename"),
+        llvm::cl::value_desc("filename"), llvm::cl::init("-")};
+    llvm::cl::opt<std::string> _output_file{
+        "output", llvm::cl::desc("Specify output filename"),
+        llvm::cl::value_desc("filename")};
     llvm::cl::opt<bool> help{llvm::cl::desc("Show help")};
-};
+  };
 
-} // namespace excerpt
+}  // namespace excerpt
