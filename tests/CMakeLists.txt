@@ -6,7 +6,7 @@ find_package(GTest REQUIRED)
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 # Set test files
-file(GLOB_RECURSE TEST_FILES *.cpp)
+file(GLOB_RECURSE TEST_FILES excerpt/*.cpp)
 add_executable(ExcerptTests ${TEST_FILES})
 
 # Linking
