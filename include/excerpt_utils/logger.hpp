@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <ctime>
+#include <mutex>
 
 namespace excerpt::logger {
 
@@ -11,6 +12,9 @@ namespace excerpt::logger {
 
   // Log function
   inline void log(LogLevel level, const std::string& message) {
+    // Use a mutex to ensure thread safety
+    static std::mutex mtx;
+
     // Get the current time
     std::time_t currentTime = std::time(0);
     std::tm* localTime = std::localtime(&currentTime);
@@ -45,6 +49,9 @@ namespace excerpt::logger {
         color = "\033[0m";  // Reset color
         break;
     }
+
+    // Lock the mutex for thread safety
+    std::lock_guard<std::mutex> lock(mtx);
 
     // Print the log message with timestamp and log level to the console
     std::cout << "[" << timestamp << "] " << color << levelStr
