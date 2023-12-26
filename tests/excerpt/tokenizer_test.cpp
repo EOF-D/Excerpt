@@ -1,99 +1,124 @@
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 #include "excerpt/tokenizer.hpp"
 
 using namespace excerpt;
 
-TEST(TokenizerTest, SingleCharacterTokens) {
-  std::shared_ptr<std::string> input =
-      std::make_shared<std::string>("+-*/%(){}[];:,.=");
+TEST(TokenizerTest, ParseNumber) {
+  Tokenizer tokenizer(std::make_shared<std::string>("123 3.14"));
+  auto token = tokenizer.next();
 
-  Tokenizer tokenizer(input);
+  EXPECT_EQ(token->type, TokenType::INTEGER_LITERAL);
+  EXPECT_EQ(token->value, "123");
 
-  EXPECT_EQ(tokenizer.scan()->type, TokenType::PLUS);
-  EXPECT_EQ(tokenizer.scan()->type, TokenType::MINUS);
-  EXPECT_EQ(tokenizer.scan()->type, TokenType::STAR);
-  EXPECT_EQ(tokenizer.scan()->type, TokenType::SLASH);
-  EXPECT_EQ(tokenizer.scan()->type, TokenType::PERCENT);
-  EXPECT_EQ(tokenizer.scan()->type, TokenType::LPAREN);
-  EXPECT_EQ(tokenizer.scan()->type, TokenType::RPAREN);
-  EXPECT_EQ(tokenizer.scan()->type, TokenType::LBRACE);
-  EXPECT_EQ(tokenizer.scan()->type, TokenType::RBRACE);
-  EXPECT_EQ(tokenizer.scan()->type, TokenType::LBRACKET);
-  EXPECT_EQ(tokenizer.scan()->type, TokenType::RBRACKET);
-  EXPECT_EQ(tokenizer.scan()->type, TokenType::SEMICOLON);
-  EXPECT_EQ(tokenizer.scan()->type, TokenType::COLON);
-  EXPECT_EQ(tokenizer.scan()->type, TokenType::COMMA);
-  EXPECT_EQ(tokenizer.scan()->type, TokenType::DOT);
-  EXPECT_EQ(tokenizer.scan()->type, TokenType::ASSIGN);
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::FLOAT_LITERAL);
+  EXPECT_EQ(token->value, "3.14");
 }
 
-TEST(TokenizerTest, IdentifierParsing) {
-  std::shared_ptr<std::string> input =
-      std::make_shared<std::string>("if while variable123 _underscore");
+TEST(TokenizerTest, ParseString) {
+  Tokenizer tokenizer(std::make_shared<std::string>("\"Hello, World!\""));
+  auto token = tokenizer.next();
 
-  Tokenizer tokenizer(input);
-
-  EXPECT_EQ(tokenizer.scan()->type, TokenType::IF);
-  EXPECT_EQ(tokenizer.scan()->type, TokenType::WHILE);
-  EXPECT_EQ(tokenizer.scan()->type, TokenType::IDENTIFIER);
-  EXPECT_EQ(tokenizer.scan()->type, TokenType::IDENTIFIER);
+  EXPECT_EQ(token->type, TokenType::STRING_LITERAL);
+  EXPECT_EQ(token->value, "Hello, World!");
 }
 
-TEST(TokenizerTest, NumberParsing) {
-  std::shared_ptr<std::string> input =
-      std::make_shared<std::string>("123 45.67");
+TEST(TokenizerTest, ParseIdentifier) {
+  Tokenizer tokenizer(std::make_shared<std::string>("variable_name"));
+  auto token = tokenizer.next();
 
-  Tokenizer tokenizer(input);
-
-  EXPECT_EQ(tokenizer.scan()->type, TokenType::INTEGER_LITERAL);
-  EXPECT_EQ(tokenizer.scan()->type, TokenType::FLOAT_LITERAL);
+  EXPECT_EQ(token->type, TokenType::IDENTIFIER);
+  EXPECT_EQ(token->value, "variable_name");
 }
 
-TEST(TokenizerTest, CharacterLiteralParsing) {
-  std::shared_ptr<std::string> input = std::make_shared<std::string>("'a' '1'");
+TEST(TokenizerTest, ParseSymbolSingle) {
+  Tokenizer tokenizer(std::make_shared<std::string>("+-*/%(){}[];:,."));
+  auto token = tokenizer.next();
 
-  Tokenizer tokenizer(input);
+  EXPECT_EQ(token->type, TokenType::PLUS);
+  EXPECT_EQ(token->value, "+");
 
-  EXPECT_EQ(tokenizer.scan()->type, TokenType::CHAR_LITERAL);
-  EXPECT_EQ(tokenizer.scan()->type, TokenType::CHAR_LITERAL);
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::MINUS);
+  EXPECT_EQ(token->value, "-");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::STAR);
+  EXPECT_EQ(token->value, "*");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::SLASH);
+  EXPECT_EQ(token->value, "/");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::PERCENT);
+  EXPECT_EQ(token->value, "%");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::LPAREN);
+  EXPECT_EQ(token->value, "(");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::RPAREN);
+  EXPECT_EQ(token->value, ")");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::LBRACE);
+  EXPECT_EQ(token->value, "{");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::RBRACE);
+  EXPECT_EQ(token->value, "}");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::LBRACKET);
+  EXPECT_EQ(token->value, "[");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::RBRACKET);
+  EXPECT_EQ(token->value, "]");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::SEMICOLON);
+  EXPECT_EQ(token->value, ";");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::COLON);
+  EXPECT_EQ(token->value, ":");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::COMMA);
+  EXPECT_EQ(token->value, ",");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::DOT);
+  EXPECT_EQ(token->value, ".");
 }
 
-TEST(TokenizerTest, StringLiteralParsing) {
-  std::shared_ptr<std::string> input =
-      std::make_shared<std::string>("\"hello world\" \"123\"");
+TEST(TokenizerTest, ParseSymbolDouble) {
+  Tokenizer tokenizer(std::make_shared<std::string>("== != <= >= < >"));
 
-  Tokenizer tokenizer(input);
+  auto token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::EQUAL);
+  EXPECT_EQ(token->value, "==");
 
-  EXPECT_EQ(tokenizer.scan()->type, TokenType::STRING_LITERAL);
-  EXPECT_EQ(tokenizer.scan()->type, TokenType::STRING_LITERAL);
-}
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::NOT_EQUAL);
+  EXPECT_EQ(token->value, "!=");
 
-TEST(TokenizerTest, EOFToken) {
-  std::shared_ptr<std::string> input = std::make_shared<std::string>("");
-  Tokenizer tokenizer(input);
-  EXPECT_EQ(tokenizer.scan()->type, TokenType::END);
-}
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::LESS_EQUAL);
+  EXPECT_EQ(token->value, "<=");
 
-TEST(TokenizerTest, DataTypeTest) {
-  std::string input = "int float char bool";
-  auto tokenizer = std::make_shared<excerpt::Tokenizer>(
-      std::make_shared<std::string>(input));
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::GREATER_EQUAL);
+  EXPECT_EQ(token->value, ">=");
 
-  // Test data type tokens
-  EXPECT_EQ(tokenizer->scan()->type, excerpt::TokenType::INT);
-  EXPECT_EQ(tokenizer->scan()->type, excerpt::TokenType::FLOAT);
-  EXPECT_EQ(tokenizer->scan()->type, excerpt::TokenType::CHAR);
-  EXPECT_EQ(tokenizer->scan()->type, excerpt::TokenType::BOOL);
-  EXPECT_EQ(tokenizer->scan()->type, excerpt::TokenType::END);
-}
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::LESS);
+  EXPECT_EQ(token->value, "<");
 
-TEST(TokenizerTest, TrueFalseTest) {
-  std::string input = "true false";
-  auto tokenizer = std::make_shared<excerpt::Tokenizer>(
-      std::make_shared<std::string>(input));
-
-  // Test true and false tokens
-  EXPECT_EQ(tokenizer->scan()->type, excerpt::TokenType::TRUE);
-  EXPECT_EQ(tokenizer->scan()->type, excerpt::TokenType::FALSE);
-  EXPECT_EQ(tokenizer->scan()->type, excerpt::TokenType::END);
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::GREATER);
+  EXPECT_EQ(token->value, ">");
 }

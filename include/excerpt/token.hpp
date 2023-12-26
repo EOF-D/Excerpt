@@ -101,7 +101,6 @@ namespace excerpt {
       {TokenType::IDENTIFIER, "IDENTIFIER"},
       {TokenType::INTEGER_LITERAL, "INTEGER_LITERAL"},
       {TokenType::FLOAT_LITERAL, "FLOAT_LITERAL"},
-      {TokenType::CHAR_LITERAL, "CHAR_LITERAL"},
       {TokenType::STRING_LITERAL, "STRING_LITERAL"},
       {TokenType::END, "END"},
       {TokenType::INVALID, "INVALID"}};
@@ -110,14 +109,18 @@ namespace excerpt {
     TokenType type;    /**< The type of the token. */
     std::string value; /**< The value of the token. */
 
+    int line;   /**< The line number. */
+    int column; /**< The column number. */
+
     /**
      * @brief Construct a new Token object.
      *
      * @param type The type of the token.
      * @param value The value of the token.
+     * @param meta The meta value of the token, i.e line number, column number.
      */
-    Token(TokenType type, const std::string& value)
-        : type(type), value(value) {}
+    Token(TokenType type, const std::string& value, int line, int column)
+        : type(type), value(value), line(line), column(column) {}
 
     /**
      * @brief Get a string representation of the token.
@@ -126,7 +129,9 @@ namespace excerpt {
      * @param value The value of the token.
      */
     std::string str() const {
-      return "Token(" + TOKEN_STR.at(type) + ", " + value + ")";
+      return "Token(" + TOKEN_STR.at(type) + ", " + value +
+             ", Line: " + std::to_string(line) +
+             ", Column: " + std::to_string(column) + ")";
     }
   };
 }  // namespace excerpt

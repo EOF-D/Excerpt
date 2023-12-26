@@ -43,7 +43,6 @@ TEST(TokenTest, ConstructionAndStringRepresentation) {
       {TokenType::IDENTIFIER, "variable"},
       {TokenType::INTEGER_LITERAL, "42"},
       {TokenType::FLOAT_LITERAL, "3.14"},
-      {TokenType::CHAR_LITERAL, "'a'"},
       {TokenType::STRING_LITERAL, "\"hello\""},
       {TokenType::END, "END"},
       {TokenType::INVALID, "INVALID"}};
@@ -51,11 +50,11 @@ TEST(TokenTest, ConstructionAndStringRepresentation) {
   for (const auto& testCase : testCases) {
     SCOPED_TRACE("Token type: " + TOKEN_STR.at(testCase.first));
 
-    Token token(testCase.first, testCase.second);
+    Token token(testCase.first, testCase.second, 1, 1);
     EXPECT_EQ(token.type, testCase.first);
     EXPECT_EQ(token.value, testCase.second);
 
     EXPECT_EQ(token.str(), "Token(" + TOKEN_STR.at(testCase.first) + ", " +
-                               testCase.second + ")");
+                               testCase.second + ", Line: 1, Column: 1)");
   }
 }

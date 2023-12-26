@@ -1,69 +1,95 @@
 #pragma once
 
+#include "token.hpp"
+
+#include <iostream>
+#include <functional>
+#include <sstream>
 #include <memory>
 #include <unordered_map>
-#include <string>
-
-#include "token.hpp"
 
 namespace excerpt {
 
   /**
-   * @brief Class for tokenizing input strings.
+   * @brief A class for tokenizing a given input string.
    */
   class Tokenizer {
    public:
     /**
-     * @brief Constructor for Tokenizer.
-     * @param input The input string to be tokenized.
+     * @brief Constructs a Tokenizer instance.
+     * @param source The source string to tokenize.
      */
-    explicit Tokenizer(std::shared_ptr<std::string> input);
+    explicit Tokenizer(std::shared_ptr<std::string> source);
 
     /**
-     * @brief Get the next token from the input string.
-     * @return The next token.
+     * @brief Peek at the next character without consuming it.
+     * @param offset The offset to peek at. Defaults to 1.
+     * @return The next character.
      */
-    std::shared_ptr<Token> scan();
+    char peek(int offset = 1);
 
     /**
-     * @brief Reset the tokenizer state.
+     * @brief Advance the current index and return the next character.
+     * @return The next character.
      */
-    void reset();
+    char advance();
 
     /**
-     * @brief Scan for single character tokens.
-     * @param current_char The current character.
-     * @return The token.
+     * @brief Get's the current character.
+     * @return The current character.
      */
-    std::shared_ptr<Token> scan_single(char current_char);
-
-   private:
-    std::shared_ptr<std::string> input;
-    size_t position; /**< The current position in the input string. */
+    char current();
 
     /**
-     * @brief Parses an identifier.
-     * @return An identifier token, can be a reserved keyword or data type.
+     * @brief Skips until character is not whitespace
+     * @return The next non-whitespace character
      */
-    std::shared_ptr<Token> parse_ident();
+    char skipws();
 
     /**
-     * @brief Parses an number literal.
-     * @return An integer token or a float token.
+     * @brief Walk the tokenizer through until the predicate is false.
+     * @param predicate The predicate to match.
+     * @return The characters that matched the predicate.
+     */
+    std::string walk(std::function<bool(char)> predicate);
+
+    /**
+     * @brief Tokenize the next character.
+     * @return The tokenized character.
+     */
+    std::shared_ptr<Token> next();
+
+    /**
+     * @brief Parses a string literal.
+     * @return The token representation of the literal.
+     */
+    std::shared_ptr<Token> parse_string();
+
+    /**
+     * @brief Parses a number literal.
+     * @return The token representation of the literal.
      */
     std::shared_ptr<Token> parse_number();
 
     /**
-     * @brief Parses a character literal.
-     * @return A character literal token.
+     * @brief Parses an identifier.
+     * @return The token representation of the identifier.
      */
-    std::shared_ptr<Token> parse_char();
+    std::shared_ptr<Token> parse_identifier();
 
     /**
-     * @brief Parses a string literal.
-     * @return A string literal token.
+     * @brief Parses a symbol.
+     * @return The token representation of the symbol.
      */
-    std::shared_ptr<Token> parse_string();
+    std::shared_ptr<Token> parse_symbol();
+
+   private:
+    std::shared_ptr<std::string>
+        source;  //**< The source string to tokenize. */
+
+    size_t index;  //**< The current index in the source string. */
+    int line;      //**< The current line number. */
+    int column;    //**< The current column number. */
   };
 
 }  // namespace excerpt
