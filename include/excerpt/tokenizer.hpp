@@ -41,8 +41,8 @@ namespace excerpt {
     char current();
 
     /**
-     * @brief Skips until character is not whitespace
-     * @return The next non-whitespace character
+     * @brief Skips until character is not whitespace or a comment
+     * @return The next non-whitespace/comment character
      */
     char skipws();
 

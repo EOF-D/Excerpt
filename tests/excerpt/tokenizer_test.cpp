@@ -163,3 +163,68 @@ TEST(TokenizerTest, ParseSymbolDouble) {
   EXPECT_EQ(token->type, TokenType::GREATER);
   EXPECT_EQ(token->value, ">");
 }
+
+TEST(TokenizerTest, SinglelineComment) {
+  Tokenizer tokenizer(
+      std::make_shared<std::string>("int x; // This is a comment\n"));
+
+  auto token = tokenizer.next();
+
+  EXPECT_EQ(token->type, TokenType::INT);
+  EXPECT_EQ(token->value, "int");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::IDENTIFIER);
+  EXPECT_EQ(token->value, "x");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::SEMICOLON);
+  EXPECT_EQ(token->value, ";");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::END);
+  EXPECT_EQ(token->value, "");
+}
+
+TEST(TokenizerTest, MultilineComment) {
+  Tokenizer tokenizer(std::make_shared<std::string>(
+      "/* This is\na multi-line\ncomment */ int y;"));
+
+  auto token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::INT);
+  EXPECT_EQ(token->value, "int");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::IDENTIFIER);
+  EXPECT_EQ(token->value, "y");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::SEMICOLON);
+  EXPECT_EQ(token->value, ";");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::END);
+  EXPECT_EQ(token->value, "");
+}
+
+TEST(TokenizerTest, CommentsWithCode) {
+  Tokenizer tokenizer(std::make_shared<std::string>(
+      "int /* Comment */ z; // Another comment\n"));
+
+  auto token = tokenizer.next();
+
+  EXPECT_EQ(token->type, TokenType::INT);
+  EXPECT_EQ(token->value, "int");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::IDENTIFIER);
+  EXPECT_EQ(token->value, "z");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::SEMICOLON);
+  EXPECT_EQ(token->value, ";");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::END);
+  EXPECT_EQ(token->value, "");
+}

@@ -45,8 +45,45 @@ namespace excerpt {
   }
 
   char Tokenizer::skipws() {
-    while (std::isspace(current())) {
-      advance();
+    while (true) {
+      // Skip whitespace characters
+      while (std::isspace(current())) {
+        advance();
+      }
+
+      // Check for single-line comments
+      if (current() == '/' && peek() == '/') {
+        while (current() != '\0' && current() != '\n') {
+          advance();
+        }
+      }
+
+      // Check for multi-line comments
+      else if (current() == '/' && peek() == '*') {
+        int sline = line;
+        int scol = column;
+
+        // Skip the opening of the multi-line comment
+        advance();
+        advance();
+
+        while (true) {
+          if (current() == '\0') {
+            // Unclosed multi-line comment
+            return '\0';
+          } else if (current() == '*' && peek() == '/') {
+            // Skip the closing of the multi-line comment
+            advance();
+            advance();
+            break;
+          } else {
+            // Skip other characters in the comment
+            advance();
+          }
+        }
+      } else {
+        break;
+      }
     }
 
     return current();
