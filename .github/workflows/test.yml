@@ -19,5 +19,5 @@ jobs:
       with:
         sourcedir: '.'
         builddir: 'build'
-        cmakeoptions: '--config Release'
+        cmakeoptions: '--D BUILD_TEST=ON'
         ctestoptions: ''
