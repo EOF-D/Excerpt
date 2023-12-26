@@ -24,11 +24,52 @@ TEST(TokenizerTest, ParseString) {
 }
 
 TEST(TokenizerTest, ParseIdentifier) {
-  Tokenizer tokenizer(std::make_shared<std::string>("variable_name"));
-  auto token = tokenizer.next();
+  Tokenizer tokenizer(std::make_shared<std::string>(
+      "variable_name _foo if else while for break continue return true false"));
 
+  auto token = tokenizer.next();
   EXPECT_EQ(token->type, TokenType::IDENTIFIER);
   EXPECT_EQ(token->value, "variable_name");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::IDENTIFIER);
+  EXPECT_EQ(token->value, "_foo");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::IF);
+  EXPECT_EQ(token->value, "if");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::ELSE);
+  EXPECT_EQ(token->value, "else");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::WHILE);
+  EXPECT_EQ(token->value, "while");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::FOR);
+  EXPECT_EQ(token->value, "for");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::BREAK);
+  EXPECT_EQ(token->value, "break");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::CONTINUE);
+  EXPECT_EQ(token->value, "continue");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::RETURN);
+  EXPECT_EQ(token->value, "return");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::TRUE);
+  EXPECT_EQ(token->value, "true");
+
+  token = tokenizer.next();
+  EXPECT_EQ(token->type, TokenType::FALSE);
+  EXPECT_EQ(token->value, "false");
 }
 
 TEST(TokenizerTest, ParseSymbolSingle) {
