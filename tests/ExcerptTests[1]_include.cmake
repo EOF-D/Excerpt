@@ -1,0 +1,5 @@
+if(EXISTS "/home/andy/projects/Excerpt/tests/ExcerptTests[1]_tests.cmake")
+  include("/home/andy/projects/Excerpt/tests/ExcerptTests[1]_tests.cmake")
+else()
+  add_test(ExcerptTests_NOT_BUILT ExcerptTests_NOT_BUILT)
+endif()
